@@ -1,0 +1,18 @@
+(
+  #"File Name" as text, 
+  #"File Location" as text, 
+  #"Database Name" as text,
+  #"File Extension" as text
+) =>
+
+let
+
+    #"File" = Text.Combine({#"File Location", #"File Name", #"File Extension"}),
+
+    #"SQL Script" = Text.FromBinary(
+        File.Contents(#"File")
+    ),
+
+    Source = Oracle.Database(#"Database", [HierarchicalNavigation=true, Query=#"SQL Script"])
+in
+    Source
